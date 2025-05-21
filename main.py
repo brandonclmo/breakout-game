@@ -54,6 +54,7 @@ while running:
 
     if score.lives <= 0: #Makes sure it works with the debug mode, also a cheat failsafe? 
         score.game_over()
+        game_over = False # Kills the game(probably need to fix this later on, but it works for now)
 
     # Check if ball hits paddle
     if (pad.rect.y < ball.y + ball.radius < pad.rect.y + pad.height
@@ -63,12 +64,16 @@ while running:
         ball.bounce_y()
         ball.y = pad.y - ball.radius
 
-    # Check if ball hits brick
-    for brick in bricks.bricks:
+    # Check if ball hits brick(collision function)
+    for brick in bricks.bricks[:]: 
         if brick.collidepoint(ball.x, ball.y - ball.radius) or brick.collidepoint(ball.x, ball.y + ball.radius):
             bricks.bricks.remove(brick)
             ball.bounce_y()
             score.score += 1
+
+    
+    if len(bricks.bricks) == 0:# Checks if bricks are all gone
+        bricks.set_values()
 
     # Check for key presses
     keys = pg.key.get_pressed()
@@ -90,21 +95,23 @@ while running:
     if keys[pg.K_LSHIFT] and keys[pg.K_7]: #Brings up losing menu(7)
         score.game_over()
 
-#The way these functions increase lifes is still problematic, but I have to sleep so it is a problem for another day
+#Increase/decreases lives 
     if keys[pg.K_LSHIFT] and keys[pg.K_MINUS]: #Lose a life(-)
-        score.lives -= 1
+        if score.lives > 0: 
+            score.lives -= 1  #works without killing the game 
+    
 
     if keys[pg.K_LSHIFT] and keys[pg.K_EQUALS]: #Gain a life(+)
         score.lives += 1
 
     # Restart game
     if keys[pg.K_0]:
-        if score.is_game_over():
+        if score.is_game_over(): 
             score.score = 0
             score.lives = 5
             bricks.bricks.clear()
             bricks.set_values()
 
     pg.display.flip()
-    clock.tick(60)
-    
+    clock.tick(60) #FPS
+

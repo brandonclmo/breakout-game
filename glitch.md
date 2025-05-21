@@ -2,7 +2,8 @@
 
 Debug menu(Does not work as intended)
 Does not kill the game at 0 lives, core game mechanics still work, need to disable all inputs apart from 0(restart)
-
+Does not end the game or regenerate blocks after winning 
+w
 # New features
 Exploding blocks(I dont know how to implement but it sounds fun)
 Paddle speed increase(probably linearly)
