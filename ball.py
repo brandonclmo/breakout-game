@@ -17,6 +17,14 @@ class Ball:
         pg.draw.circle(self.screen, self.color, [self.x, self.y], self.radius)
         self.y -= self.y_speed
         self.x -= self.x_speed
+    
+    def check_for_contact_on_x(self):
+        if self.x - self.radius <= 0 or self.x + self.radius >= self.screen.get_width():
+            self.bounce_x()
+    
+    def check_for_contact_on_y(self):
+        if self.y - self.radius <= 0:
+            self.bounce_y()
 
     def bounce_x(self):
         self.x_speed *= Ballspeed

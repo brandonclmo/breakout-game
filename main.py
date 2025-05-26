@@ -22,54 +22,43 @@ ball = Ball(ball_x, ball_y, screen)
 score = ScoreBoard(text_x, color, screen)
 score.set_high_score()
 
-
+# Running loop 
 running = True
 while running:
+    for event in pg.event.get():   # Check for quit game
+        if event.type == pg.QUIT:
+            running = False
     fill_gradient(screen, BG_purple, BG_darkpurple) #Cool gradient BG 
     score.show_scores() #Big numbers 
     pad.appear(screen) #The paddle
     bricks.show_bricks() #The bricks
 
-    # Check for quit game
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            score.record_high_score()
-            running = False
-
-    else:
-        ball.move()
-
-    # Check if ball hits the x-axis above
+   
+   
+    # Check if ball hits the x-axis and y-axis 
     ball.check_for_contact_on_x()
-
-    # Check if ball hits y-axis
     ball.check_for_contact_on_y()
 
-    # Check if ball falls off
-    if ball.y + ball.radius >= 580:
-        ball.y = pad.y - ball.radius
-        pg.time.delay(2000)
-        score.lives -= 1
-        ball.bounce_y()
 
+    
+
+    # Check if ball falls off
+   
     if score.lives <= 0: #Makes sure it works with the debug mode, also a cheat failsafe? 
         score.game_over()
-        game_over = False # Kills the game(probably need to fix this later on, but it works for now)
+        game_over = False 
 
     # Check if ball hits paddle
-    if (pad.rect.y < ball.y + ball.radius < pad.rect.y + pad.height
-            and
-            pad.rect.x < ball.x + ball.radius < pad.rect.x + pad.width):
-
+        # Check if ball hits paddle
+    if pad.rect.collidepoint(ball.x, ball.y + ball.radius):
         ball.bounce_y()
-        ball.y = pad.y - ball.radius
 
     # Check if ball hits brick(collision function)
-    for brick in bricks.bricks[:]: 
-        if brick.collidepoint(ball.x, ball.y - ball.radius) or brick.collidepoint(ball.x, ball.y + ball.radius):
-            bricks.bricks.remove(brick)
-            ball.bounce_y()
-            score.score += 1
+for brick in bricks.bricks[:]:  # Iterate over a copy to safely remove bricks
+    if brick.collidepoint(ball.x, ball.y - ball.radius) or brick.collidepoint(ball.x, ball.y + ball.radius):
+        bricks.bricks.remove(brick)
+        ball.bounce_y()
+        score.score += 1
 
     
     if len(bricks.bricks) == 0:# Checks if bricks are all gone
