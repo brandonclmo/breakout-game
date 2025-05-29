@@ -32,6 +32,7 @@ while running:
     score.show_scores() #Big numbers 
     pad.appear(screen) #The paddle
     bricks.show_bricks() #The bricks
+    
 
    
    
@@ -54,11 +55,11 @@ while running:
         ball.bounce_y()
 
     # Check if ball hits brick(collision function)
-for brick in bricks.bricks[:]:  # Iterate over a copy to safely remove bricks
-    if brick.collidepoint(ball.x, ball.y - ball.radius) or brick.collidepoint(ball.x, ball.y + ball.radius):
-        bricks.bricks.remove(brick)
-        ball.bounce_y()
-        score.score += 1
+    for brick in bricks.bricks[:]:  # Iterate over a copy to safely remove bricks
+        if brick.collidepoint(ball.x, ball.y - ball.radius) or brick.collidepoint(ball.x, ball.y + ball.radius):
+            bricks.bricks.remove(brick)
+            ball.bounce_y()
+            score.score += 1
 
     
     if len(bricks.bricks) == 0:# Checks if bricks are all gone
