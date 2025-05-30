@@ -11,6 +11,8 @@ LIGHTRED: tuple = (193, 66, 63)
 RED: tuple = (38, 0, 1)
 BLACK: tuple = (0, 0, 0)
 PURPLE: tuple = (138, 0, 196)
+GREEN: tuple = (177, 210, 68)
+
 
 #BG colours
 BG_purple: tuple = (126, 46, 83)

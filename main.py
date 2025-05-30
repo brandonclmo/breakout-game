@@ -4,6 +4,7 @@ from bricks import Bricks
 from ball import Ball
 from scores import ScoreBoard
 from settings import *
+import settings
 
 
 pg.init()
@@ -18,7 +19,7 @@ clock = pg.time.Clock()
 # OBJECTS FROM OTHER FILES 
 pad = Paddle(paddle_x, paddle_y)
 bricks = Bricks(screen, brick_width, brick_height)
-ball = Ball(ball_x, ball_y, screen)
+ball = Ball(ball_x, ball_y, screen) 
 score = ScoreBoard(text_x, color, screen)
 score.set_high_score()
 
@@ -32,7 +33,7 @@ while running:
     score.show_scores() #Big numbers 
     pad.appear(screen) #The paddle
     bricks.show_bricks() #The bricks
-    
+    ball.move ()
 
    
    
@@ -55,11 +56,21 @@ while running:
         ball.bounce_y()
 
     # Check if ball hits brick(collision function)
-    for brick in bricks.bricks[:]:  # Iterate over a copy to safely remove bricks
+    for i, brick in enumerate(bricks.bricks[:]):  # Use enumerate for index
         if brick.collidepoint(ball.x, ball.y - ball.radius) or brick.collidepoint(ball.x, ball.y + ball.radius):
-            bricks.bricks.remove(brick)
+            color = bricks.brick_colors[i]
+            # If green brick, explode neighbors and it self 
+            if color == settings.GREEN:
+                adjacent_indices = bricks.exploding_bricks(i)
+                for adj in sorted(adjacent_indices, reverse=True):
+                    del bricks.bricks[adj]
+                    del bricks.brick_colors[adj]
+            # Remove the hit brick
+            del bricks.bricks[i]
+            del bricks.brick_colors[i]
             ball.bounce_y()
             score.score += 1
+            break  # Only handle one collision per frame
 
     
     if len(bricks.bricks) == 0:# Checks if bricks are all gone
