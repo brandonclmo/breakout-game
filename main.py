@@ -45,6 +45,14 @@ while running:
     
 
     # Check if ball falls off
+    if ball.y + ball.radius > HEIGHT:
+        score.lives -= 1
+        # Respawn
+        ball.x = ball_x
+        ball.y = ball_y
+        pad.rect.x = ball_x - pad.width // 2  # Teleport paddle under ball back to centre pos
+    
+
    
     if score.lives <= 0: #Makes sure it works with the debug mode, also a cheat failsafe? 
         score.game_over()
