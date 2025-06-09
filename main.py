@@ -69,16 +69,22 @@ while running:
             color = bricks.brick_colors[i]
             # If green brick, explode neighbors and it self 
             if color == settings.GREEN:
-                adjacent_indices = bricks.exploding_bricks(i)
-                for adj in sorted(adjacent_indices, reverse=True):
-                    del bricks.bricks[adj]
-                    del bricks.brick_colors[adj]
-            # Remove the hit brick
-            del bricks.bricks[i]
-            del bricks.brick_colors[i]
-            ball.bounce_y()
-            score.score += 1
-            break  # Only handle one collision per frame
+                # Get all indices to delete: the green brick and its adjacent ones
+                indices_to_delete = [i] + bricks.exploding_bricks(i)
+                for idx in sorted(set(indices_to_delete), reverse=True):
+                    if idx < len(bricks.bricks):  # Prevent index out of range
+                        del bricks.bricks[idx]
+                        del bricks.brick_colors[idx]
+                ball.bounce_y()
+                score.score += 1
+                break  # Only handle one collision per frame
+            else:
+                # Remove the hit brick (not green)
+                del bricks.bricks[i]
+                del bricks.brick_colors[i]
+                ball.bounce_y()
+                score.score += 1
+                break
 
     
     if len(bricks.bricks) == 0:# Checks if bricks are all gone

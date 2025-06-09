@@ -50,10 +50,16 @@ class Bricks:
         bricks_per_row = len([x for x in range(10, 550, 42)])  # Same as in set_values
         row = index // bricks_per_row
 
-        # Left neighbor (must be in the same row)
+        # Left neighbor (must be in the same row and touching)
         if index > 0 and (index - 1) // bricks_per_row == row:
-            adjacent.append(index - 1)
-        # Right neighbor (must be in the same row)
+            left_brick = self.bricks[index - 1]
+            this_brick = self.bricks[index]
+            if left_brick.right == this_brick.left:
+                adjacent.append(index - 1)
+        # Right neighbor (must be in the same row and touching)
         if index < len(self.bricks) - 1 and (index + 1) // bricks_per_row == row:
-            adjacent.append(index + 1)
+            right_brick = self.bricks[index + 1]
+            this_brick = self.bricks[index]
+            if right_brick.left == this_brick.right:
+                adjacent.append(index + 1)
         return adjacent
