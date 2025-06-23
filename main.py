@@ -23,6 +23,7 @@ ball = Ball(ball_x, ball_y, screen)
 score = ScoreBoard(text_x, color, screen)
 score.set_high_score()
 
+game_over = False
 # Running loop 
 running = True
 while running:
@@ -46,17 +47,21 @@ while running:
 
     # Check if ball falls off
     if ball.y + ball.radius > HEIGHT:
-        score.lives -= 1
-        # Respawn
-        ball.x = ball_x
-        ball.y = ball_y
-        pad.rect.x = ball_x - pad.width // 2  # Teleport paddle under ball back to centre pos
+        if score.lives > 0:
+            score.lives -= 1
+            if score.lives > 0:
+                # Respawn only if lives remain
+                ball.x = ball_x
+                ball.y = ball_y
+                pad.rect.x = ball_x - pad.width // 2
+                ball.x_speed = ball_x_speed      # Reset ball speed
+                ball.y_speed = ball_y_speed
     
 
    
     if score.lives <= 0: #Makes sure it works with the debug mode, also a cheat failsafe? 
         score.game_over()
-        game_over = False 
+        game_over = True
 
     # Check if ball hits paddle
         # Check if ball hits paddle
@@ -69,10 +74,9 @@ while running:
             color = bricks.brick_colors[i]
             # If green brick, explode neighbors and it self 
             if color == settings.GREEN:
-                # Get all indices to delete: the green brick and its adjacent ones
                 indices_to_delete = [i] + bricks.exploding_bricks(i)
                 for idx in sorted(set(indices_to_delete), reverse=True):
-                    if idx < len(bricks.bricks):  # Prevent index out of range
+                    if idx < len(bricks.bricks):
                         del bricks.bricks[idx]
                         del bricks.brick_colors[idx]
                 ball.bounce_y()
@@ -92,11 +96,18 @@ while running:
 
     # Check for key presses
     keys = pg.key.get_pressed()
-    if keys[pg.K_RIGHT]:
-        pad.move_right()
-
-    if keys[pg.K_LEFT]:
-        pad.move_left()
+    if not game_over:
+        # Paddle movement
+        if keys[pg.K_RIGHT]:
+            pad.move_right()
+        if keys[pg.K_LEFT]:
+            pad.move_left()
+        # Debug and other in-game controls
+        if keys[pg.K_LSHIFT] and keys[pg.K_MINUS]:
+            if score.lives > 0: 
+                score.lives -= 1
+        if keys[pg.K_LSHIFT] and keys[pg.K_EQUALS]:
+            score.lives += 1
 
     #DEBUG MODE PRESS LEFT SHIFT AND ITS BUTTON TO ACTIVATE 
     if keys[pg.K_LSHIFT] and keys[pg.K_9]:  # Debug mode, kill all bricks and win(9)
@@ -120,13 +131,19 @@ while running:
         score.lives += 1
 
     # Restart game
-    if keys[pg.K_0]:
-        if score.is_game_over(): 
-            score.score = 0
-            score.lives = 5
-            bricks.bricks.clear()
-            bricks.set_values()
+    if game_over and keys[pg.K_0]:
+        score.score = 0
+        score.lives = 5
+        bricks.bricks.clear()
+        bricks.set_values()
+        game_over = False
+        Ballspeed= -1 
 
     pg.display.flip()
     clock.tick(60) #FPS
+def set_values(self):
+    y_values = [int(y) for y in range(100, 200, 25)]
+    x_values = [int(x) for x in range(10, 550, 42)]
+    y_index = 0
+    self.loop(x_values, y_values, y_index)
 

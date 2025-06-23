@@ -1,7 +1,7 @@
 import pygame as pg
 from settings import ball_x_speed, ball_y_speed, ball_radius
 
-Ballspeed = -1 #Change Ball speed here(has to be a negative value, because it will move left for x and up for y)
+Ballspeed = -1.1 #Change Ball speed here(has to be a negative value, because it will move left for x and up for y)
 #I want to set a cap on the exponential growth of the speed, maybe make it linear 
 class Ball:
 
@@ -14,11 +14,15 @@ class Ball:
         self.x_speed = ball_x_speed
         self.y_speed = ball_y_speed
     def move(self):
+        # Draw outline first (black, slightly larger radius)
+        pg.draw.circle(self.screen, (0, 0, 255), [self.x, self.y], self.radius + 10)
+        # Draw the filled ball
         pg.draw.circle(self.screen, self.color, [self.x, self.y], self.radius)
         self.y -= self.y_speed
         self.x -= self.x_speed
+        pg.draw.circle
         # print (self.x, self.y) 
-        
+        print(f"Ball speed: x_speed={self.x_speed}, y_speed={self.y_speed}") 
     def bounce_x(self):
         self.x_speed *= Ballspeed
 

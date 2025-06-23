@@ -7,14 +7,14 @@ class Bricks:
         self.screen = screen
         self.width = width
         self.height = height
-        self.random_colors = settings.BLACK, settings.RED, settings.GREEN 
+        self.random_colors = settings.RED, settings.GREEN 
         self.bricks = []
         self.brick_colors = []
         self.set_values()
 
     def set_values(self):
-        y_values = [int(y) for y in range(100, 200, 25)]
-        x_values = [int(x) for x in range(10, 550, 42)]
+        y_values = [int(y) for y in range(100, 200, self.height + 5)]  # 5 is vertical gap, set to 0 for no gap
+        x_values = [int(x) for x in range(10, 550, self.width)]  # Use self.width for no horizontal gap
         y_index = 0
         self.loop(x_values, y_values, y_index)
 
@@ -43,7 +43,8 @@ class Bricks:
         for loop in range(len(self.bricks)):
             brick = self.bricks[loop]
             color = self.brick_colors[loop]
-            pg.draw.rect(self.screen, color, brick)
+            pg.draw.rect(self.screen, color, brick)  # Filled brick
+            pg.draw.rect(self.screen, (0, 0, 255), brick, 2)  # yellow outline, width=2
 
     def exploding_bricks(self, index):
         adjacent = []
